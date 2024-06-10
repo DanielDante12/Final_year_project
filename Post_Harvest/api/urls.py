@@ -16,4 +16,6 @@ urlpatterns=[
     path('messages/', views.list_messages, name='list_messages'),
     path('createPost/', views.create_post, name="create_post"),
     path('getPost/<str:pk>', views.getPost, name="view_post"),
+    path('posts/<int:post_id>/addcomment/', views.create_comment, name='add_comment'),
+    path('posts/<int:post_id>/viewcomment/', views.view_comment, name='view_comment'),
 ]

@@ -12,4 +12,5 @@ admin.site.register(Equipment)
 admin.site.register(Notification)
 admin.site.register(Message)
 admin.site.register(Post)
+admin.site.register(Comment)
 # Register your models here.
