@@ -63,10 +63,14 @@ class AgriculturalOrganization(models.Model):
         return self.name
 
 class OTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otps', default=1)
     organization = models.ForeignKey(AgriculturalOrganization, on_delete=models.CASCADE)
-    otp = models.CharField(max_length=6)
-    created_at = models.DateTimeField(auto_now_add=True)
-
+    otp_code = models.CharField(max_length=6)
+    created= models.DateTimeField(auto_now_add=True)
+    is_valid = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return f'OTP for {self.user}'
 class Information(models.Model):
     viewers = models.ManyToManyField(User, related_name='viewers')
     description = models.TextField()
@@ -127,7 +131,7 @@ class Notification(models.Model):
     title = models.CharField(max_length=200)
     message = models.TextField()
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
 
     def __str__(self):

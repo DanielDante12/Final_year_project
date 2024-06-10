@@ -18,4 +18,5 @@ urlpatterns=[
     path('getPost/<str:pk>', views.getPost, name="view_post"),
     path('posts/<int:post_id>/addcomment/', views.create_comment, name='add_comment'),
     path('posts/<int:post_id>/viewcomment/', views.view_comment, name='view_comment'),
+    path('validate-otp/', views.validate_otp, name='validate_otp'),
 ]

@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from .models import AgriculturalOrganization, OTP, Information,Notification, Message, Post, Comment
-from .serializers import AgriculturalOrganizationSerializer, InfromationSerilizer, UpdateOrganizationSerializer,ViewInformationSerializer, ViewAllOrganizationsSerializer,NotificationSerializer, MessageSerializer, PostSerializer, CommentSerializer
+from .serializers import AgriculturalOrganizationSerializer, InfromationSerilizer, UpdateOrganizationSerializer,ViewInformationSerializer, ViewAllOrganizationsSerializer,NotificationSerializer, MessageSerializer, PostSerializer, CommentSerializer, OTPValidationSerializer
 from django.core.mail import send_mail
 import random
 import logging
@@ -23,18 +23,18 @@ class SignupView(APIView):
             organization = serializer.save()
 
             # Generate OTP
-            otp = str(random.randint(100000, 999999))
+            otp_code = str(random.randint(100000, 999999))
 
             # Save OTP to the database
             OTP.objects.create(
-                organization=organization, otp=otp
+                organization=organization, otp_code=otp_code
             )
 
             try:
                 # Send OTP via email
                 send_mail(
                     'Your OTP Code',
-                    f'Your OTP code is {otp}',
+                    f'Your OTP code is {otp_code}',
                     'ofwonodani12@gmail.com',
                     [organization.email],
                     fail_silently=False,
@@ -235,3 +235,24 @@ def view_comment(request, post_id):
     serializer=CommentSerializer(comment, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+#endpoint to validate OTP sent o the farmer's contact
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def validate_otp(request):
+    try:
+        serializer = OTPValidationSerializer(data=request.data)
+        if serializer.is_valid():
+            otp_code = serializer.validated_data.get('otp_code')
+            user = request.user
+            try:
+                otp = OTP.objects.get(user=user, otp_code=otp_code, is_valid=True)
+                otp.is_valid = False
+                otp.save()
+                return Response({'message': 'OTP is valid'}, status=status.HTTP_200_OK)
+            except OTP.DoesNotExist:
+                return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        logger.exception("Error in validate_otp view: %s", str(e))
+        return Response({'error': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

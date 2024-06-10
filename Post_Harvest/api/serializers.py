@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from django.db import models
-from .models import AgriculturalOrganization, Information, Notification, Message, Post, Comment
+from .models import AgriculturalOrganization, Information, Notification, Message, Post, Comment, OTP
 
 class AgriculturalOrganizationSerializer(ModelSerializer):
     class Meta:
@@ -29,21 +29,26 @@ class ViewAllOrganizationsSerializer(ModelSerializer):
 class NotificationSerializer(ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['id', 'title', 'message', 'recipient', 'created_at', 'read']
+        fields = ['id', 'title', 'message', 'recipient', 'created', 'read']
 
 class MessageSerializer(ModelSerializer):
     class Meta:
         model = Message
-        fields = ['id', 'sender', 'recipient', 'subject', 'body', 'sent_at', 'read']
+        fields = ['id', 'sender', 'recipient', 'subject', 'body', 'sent', 'read']
         
 class PostSerializer(ModelSerializer):
     class Meta:
         model=Post
         fields = ['id', 'title', 'content', 'author', 'created']
-        read_only_fields = ['author', 'created_at']
+        read_only_fields = ['author', 'created']
         
 class CommentSerializer(ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'post', 'author', 'content', 'created']
-        read_only_fields = ['author', 'created_at']
+        read_only_fields = ['author', 'created']
+        
+class OTPValidationSerializer(ModelSerializer):
+    class Meta:
+        model=OTP
+        fields=['otp_code']
