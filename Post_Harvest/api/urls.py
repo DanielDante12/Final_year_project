@@ -11,7 +11,9 @@ urlpatterns=[
     path('organizations/', views.view_all_organizations, name='view_all_orgizations'),
     path('approveOrganization/<str:pk>',views.approve_organization, name='approve_organization'),
     path('notifications/', views.list_notifications, name='list_notifications'),
-    path('createnotifications//', views.create_notification, name='create_notification'),
+    path('createnotifications/', views.create_notification, name='create_notification'),
     path('sendmessages/', views.send_message, name='send_message'),
     path('messages/', views.list_messages, name='list_messages'),
+    path('createPost/', views.create_post, name="create_post"),
+    path('getPost/<str:pk>', views.getPost, name="view_post"),
 ]

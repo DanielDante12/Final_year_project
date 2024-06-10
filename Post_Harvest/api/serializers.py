@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from django.db import models
-from .models import AgriculturalOrganization, Information, Notification, Message
+from .models import AgriculturalOrganization, Information, Notification, Message, Post
 
 
 class AgriculturalOrganizationSerializer(ModelSerializer):
@@ -36,3 +36,9 @@ class MessageSerializer(ModelSerializer):
     class Meta:
         model = Message
         fields = ['id', 'sender', 'recipient', 'subject', 'body', 'sent_at', 'read']
+        
+class PostSerializer(ModelSerializer):
+    class Meta:
+        model=Post
+        fields = ['id', 'title', 'content', 'author', 'created']
+        read_only_fields = ['author', 'created_at']

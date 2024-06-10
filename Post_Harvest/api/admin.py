@@ -11,4 +11,5 @@ admin.site.register(Pest)
 admin.site.register(Equipment)
 admin.site.register(Notification)
 admin.site.register(Message)
+admin.site.register(Post)
 # Register your models here.
