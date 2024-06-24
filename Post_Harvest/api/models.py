@@ -60,6 +60,29 @@ class AgriculturalOrganization(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Crop(models.Model):
+    type = models.CharField(max_length=50)
+    variety = models.CharField(max_length=100)
+
+    def __str__(self):
+        
+        return self.type 
+class Information(models.Model):
+    # viewers = models.ManyToManyField(User, related_name='viewers')
+    description = models.TextField()
+    instructions = models.TextField()
+    tutorial = models.FileField(upload_to="static/uploads/tutorials", null = True)
+    category = models.CharField(max_length=40)
+    # frequency = models.CharField(null=True, blank=True, max_length=50)
+    # controltiming = models.CharField(null=True, blank=True, max_length=50)
+    crop=models.ForeignKey(Crop, on_delete=models.CASCADE, related_name='crop')
+    
+    communicationOfficer = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='organization_communication_officer')
+
+    def __str__(self):
+        return self.description    
 
 class OTP(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otps', default=1)
@@ -86,29 +109,7 @@ class Pest(models.Model):
         return self.name
 
   
-class Crop(models.Model):
-    type = models.CharField(max_length=50)
-    variety = models.CharField(max_length=100)
-    pests = models.ManyToManyField(Pest, related_name='pest')
 
-    def __str__(self):
-        
-        return self.type 
-class Information(models.Model):
-    # viewers = models.ManyToManyField(User, related_name='viewers')
-    description = models.TextField()
-    instructions = models.TextField()
-    tutorial = models.FileField(upload_to="static/uploads/tutorials", null = True)
-    category = models.CharField(max_length=40)
-    # frequency = models.CharField(null=True, blank=True, max_length=50)
-    # controltiming = models.CharField(null=True, blank=True, max_length=50)
-    crop=models.ForeignKey(Crop, on_delete=models.CASCADE, related_name='crop')
-    
-    communicationOfficer = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='organization_communication_officer')
-
-    def __str__(self):
-        return self.description
     
  
 class Equipment(models.Model):
